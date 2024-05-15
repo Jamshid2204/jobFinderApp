@@ -14,7 +14,7 @@ class JobListPage extends StatelessWidget {
         preferredSize: Size.fromHeight(50.w),
         child: const CustomAppBar(
           text: "Jobs",
-          child: BackBtn(),
+          child: BackBtn(color: Colors.black,),
         ),
       ),
       body: const PopularJobsList(),

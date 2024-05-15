@@ -29,7 +29,7 @@ class Job {
   final String id;
   final String title;
   final String location;
-  // final String company;
+  final String company;
   final bool hiring;
   final String salary;
   final String period;
@@ -42,7 +42,7 @@ class Job {
     required this.id,
     required this.title,
     required this.location,
-    // required this.company,
+    required this.company,
     required this.hiring,
     required this.salary,
     required this.period,
@@ -56,7 +56,7 @@ class Job {
         id: json["_id"],
         title: json["title"],
         location: json["location"],
-        // company: json["company"],
+        company: json["company"],
         hiring: json["hiring"],
         salary: json["salary"],
         period: json["period"],

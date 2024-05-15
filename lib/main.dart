@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:jobfinderapp/constants/app_constants.dart';
+import 'package:jobfinderapp/controllers/agents_provider.dart';
 import 'package:jobfinderapp/controllers/bookmark_provider.dart';
 import 'package:jobfinderapp/controllers/image_provider.dart';
 import 'package:jobfinderapp/controllers/jobs_provider.dart';
@@ -11,6 +13,7 @@ import 'package:jobfinderapp/controllers/profile_provider.dart';
 import 'package:jobfinderapp/controllers/signup_provider.dart';
 import 'package:jobfinderapp/controllers/skills_provider.dart';
 import 'package:jobfinderapp/controllers/zoom_provider.dart';
+import 'package:jobfinderapp/firebase_options.dart';
 import 'package:jobfinderapp/views/screens/mainscreen.dart';
 import 'package:provider/provider.dart';
 import 'package:jobfinderapp/views/screens/onboarding/onboarding_screen.dart';
@@ -22,6 +25,9 @@ Widget defaultHome = const OnBoardingScreen();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   final entrypoint = prefs.getBool("entrypoint") ?? false;
@@ -42,6 +48,7 @@ void main() async {
     ChangeNotifierProvider(create: (context) => ProfileNotifier()),
     ChangeNotifierProvider(create: (context) => BookNotifier()),
     ChangeNotifierProvider(create: (context) => SkillsNotifier()),
+    ChangeNotifierProvider(create: (context) => AgentsNotifier()),
   ], child: const MyApp()));
 }
 

@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jobfinderapp/constants/app_constants.dart';
-import 'package:jobfinderapp/controllers/bookmark_provider.dart';
 import 'package:jobfinderapp/controllers/login_provider.dart';
-import 'package:jobfinderapp/models/response/bookmarks/all_bookmarks.dart';
+import 'package:jobfinderapp/models/response/applied/applied.dart';
+import 'package:jobfinderapp/services/helpers/applied_helper.dart';
+import 'package:jobfinderapp/views/common/app_bar.dart';
+import 'package:jobfinderapp/views/common/drawer/drawer_widget.dart';
+import 'package:jobfinderapp/views/common/exports.dart';
 import 'package:jobfinderapp/views/common/pages_loader.dart';
 import 'package:jobfinderapp/views/common/styled_container.dart';
+import 'package:jobfinderapp/views/screens/applications/widgets/applied_tile.dart';
 import 'package:jobfinderapp/views/screens/auth/non_user.dart';
-import 'package:jobfinderapp/views/screens/bookmarks/widgets/bookmark_widget.dart';
 import 'package:provider/provider.dart';
-import '../../common/app_bar.dart';
-import '../../common/drawer/drawer_widget.dart';
 
-class BookMarkPage extends StatefulWidget {
-  const BookMarkPage({super.key});
+class AppliedJobs extends StatelessWidget {
+  const AppliedJobs({super.key});
 
   @override
-  State<BookMarkPage> createState() => _BookMarkPageState();
-}
-
-class _BookMarkPageState extends State<BookMarkPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     var loginNotifier = Provider.of<LoginNotifier>(context);
     return Scaffold(
       backgroundColor: Color(kNewBlue.value),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.h),
         child: CustomAppBar(
+          text: "Applied jobs",
           color: Color(kNewBlue.value),
-          text: !loginNotifier.loggedIn ? "" : "Bookmarks",
           child: Padding(
             padding: EdgeInsets.all(12.0.h),
             child: DrawerWidget(
@@ -40,11 +35,7 @@ class _BookMarkPageState extends State<BookMarkPage> {
       ),
       body: loginNotifier.loggedIn == false
           ? const NonUser()
-          : Consumer<BookNotifier>(
-              builder: (context, bookNotifier, child) {
-                bookNotifier.getBookMarks();
-                var bookmarks = bookNotifier.getBookMarks();
-                return Stack(
+          : Stack(
                   children: [
                     Positioned(
                         top: 0,
@@ -62,8 +53,8 @@ class _BookMarkPageState extends State<BookMarkPage> {
                               context,
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                child: FutureBuilder<List<AllBookMarks>>(
-                                  future: bookmarks,
+                                child: FutureBuilder<List<Applied>>(
+                                  future: AppliedtHelper.getApplied(),
                                   builder: ((context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -71,16 +62,13 @@ class _BookMarkPageState extends State<BookMarkPage> {
                                     } else if (snapshot.hasError) {
                                       return Text("Error: ${snapshot.error}");
                                     } else {
-                                      var processedBooks = snapshot.data;
+                                      var jobs = snapshot.data;
                                       return ListView.builder(
-                                          itemCount: processedBooks!.length,
+                                          itemCount: jobs!.length,
                                           scrollDirection: Axis.vertical,
                                           itemBuilder: (context, index) {
-                                            final bookmark =
-                                                processedBooks[index];
-
-                                            return BookMarkTile(
-                                                bookmarks: bookmark);
+                                            final job = jobs[index].job;
+                                            return AppliedTile(job: job);
                                           });
                                     }
                                   }),
@@ -88,10 +76,8 @@ class _BookMarkPageState extends State<BookMarkPage> {
                               )),
                         ))
                   ],
-                );
+                )
               
-              },
-            ),
     );
   }
 }

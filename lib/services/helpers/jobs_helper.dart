@@ -109,7 +109,7 @@ class JobsHelper {
     }
   }
 
-      static Future<bool> updateJob(String model) async {
+      static Future<bool> updateJob(String model, String jobid) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
@@ -123,7 +123,7 @@ class JobsHelper {
         'authorization': 'Bearer $token'
       };
 
-      var url = Uri.https(Config.apiUrl, Config.jobs);
+      var url = Uri.https(Config.apiUrl, "${Config.jobs}/$jobid");
       print(url);
       print(token);
       var response = await client.put(url, headers: requestHeaders, body: model);

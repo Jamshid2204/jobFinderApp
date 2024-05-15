@@ -9,45 +9,51 @@ class GetJobRes {
         required this.id,
         required this.title,
         required this.location,
-        // required this.company,
-        required this.hiring,
+        required this.company,
+        required this.agentName,
         required this.description,
+        required this.category,
         required this.salary,
-        required this.period,
         required this.contract,
-        required this.requirements,
+        required this.hiring,
+        required this.period,
         required this.imageUrl,
         required this.agentId,
+        required this.requirements,
         // required this.updatedAt,
     });
 
     final String id;
     final String title;
     final String location;
-    // final String company;
-    final bool hiring;
+    final String company;
+    final String agentName;
     final String description;
+    final String category;
     final String salary;
-    final String period;
     final String contract;
-    final List<String> requirements;
+    final bool hiring;
+    final String period;
     final String imageUrl;
     final String agentId;
+    final List<String> requirements;
     // final DateTime updatedAt;
 
     factory GetJobRes.fromJson(Map<String, dynamic> json) => GetJobRes(
         id: json["_id"],
         title: json["title"],
         location: json["location"],
-        // company: json["company"],
-        hiring: json["hiring"],
+        company: json["company"],
+        agentName: json["agentName"],
         description: json["description"],
+        category: json["category"],
         salary: json["salary"],
-        period: json["period"],
         contract: json["contract"],
-        requirements: List<String>.from(json["requirements"].map((x) => x)),
+        hiring: json["hiring"],
+        period: json["period"],
         imageUrl: json["imageUrl"],
         agentId: json["agentId"],
+        requirements: List<String>.from(json["requirements"].map((x) => x)),
         // updatedAt: DateTime.parse(json["updatedAt"]),
     );
 
@@ -55,15 +61,17 @@ class GetJobRes {
         "_id": id,
         "title": title,
         "location": location,
+        "company": company,
+        "agentName": agentName,
         "description": description,
-        // "company": company,
-        "hiring": hiring,
+        "category": category,
         "salary": salary,
-        "period": period,
         "contract": contract,
-        "requirements": List<dynamic>.from(requirements.map((x) => x)),
+        "hiring": hiring,
+        "period": period,
         "imageUrl": imageUrl,
         "agentId": agentId,
+        "requirements": List<dynamic>.from(requirements.map((x) => x)),
         // "updatedAt": updatedAt.toIso8601String(),
     };
 }

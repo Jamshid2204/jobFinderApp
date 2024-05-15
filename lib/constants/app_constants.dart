@@ -6,7 +6,8 @@ import 'package:jobfinderapp/models/response/jobs/get_job.dart';
 const kDark = Color(0xFF000000);
 const kLight = Color(0xFFFFFFFF);
 const kLightGrey = Color(0x2EB5C0C1);
-const kDarkGrey = Color(0xFF9B9B9B);
+// const kDarkGrey = Color(0xFF9B9B9B);
+const kDarkGrey = Color.fromARGB(255, 116, 115, 115);
 const kOrange = Color(0xfff55631);
 const kLightBlue = Color(0xff3663e3);
 const kDarkBlue = Color(0xff1c153e);
@@ -61,3 +62,4 @@ List<dynamic> salaries = [
 
 late GetJobRes editable;
 List<String> bookmarks = [];
+GetJobRes? jobUpdate;

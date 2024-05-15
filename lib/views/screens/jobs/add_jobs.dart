@@ -46,7 +46,7 @@ class _AddJobs extends State<AddJobs> {
           child: CustomAppBar(
               color: Color(kNewBlue.value),
               text: "Upload Job",
-              child: const BackBtn())),
+              child: const BackBtn(color: Colors.white,))),
       body: Stack(
         children: [
           Positioned(

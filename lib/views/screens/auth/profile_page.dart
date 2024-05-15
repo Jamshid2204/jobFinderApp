@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Padding(
             padding: EdgeInsets.all(12.0.h),
             child: widget.drawer == false
-                ? const BackBtn()
+                ? const BackBtn(color: Colors.white,)
                 : const DrawerWidget(
                     color: Color.fromARGB(255, 16, 155, 23),
                   ),

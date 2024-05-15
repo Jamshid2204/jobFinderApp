@@ -33,6 +33,7 @@ class Job {
     final String title;
     final String location;
     final String company;
+    final String agentName;
     final bool hiring;
     final String salary;
     final String period;
@@ -45,6 +46,7 @@ class Job {
         required this.title,
         required this.location,
         required this.company,
+        required this.agentName,
         required this.hiring,
         required this.salary,
         required this.period,
@@ -58,6 +60,7 @@ class Job {
         title: json["title"],
         location: json["location"],
         company: json["company"],
+        agentName: json["agentName"],
         hiring: json["hiring"],
         salary: json["salary"],
         period: json["period"],
@@ -71,6 +74,7 @@ class Job {
         "title": title,
         "location": location,
         "company": company,
+        "agentName": agentName,
         "hiring": hiring,
         "salary": salary,
         "period": period,

@@ -7,6 +7,7 @@ import 'package:jobfinderapp/views/common/app_style.dart';
 import 'package:jobfinderapp/views/common/drawer/drawer_widget.dart';
 import 'package:jobfinderapp/views/common/heading_widget.dart';
 import 'package:jobfinderapp/views/common/search.dart';
+import 'package:jobfinderapp/views/screens/auth/login.dart';
 import 'package:jobfinderapp/views/screens/auth/profile.dart';
 import 'package:jobfinderapp/views/screens/home/widgets/popularJobs.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,7 +39,9 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.all(12.0.h),
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(() => const ProfilePage(drawer: false));
+                    loginNotifier.loggedIn == true?
+                    Get.to(() => const ProfilePage(drawer: false)):
+                    Get.to(() => const LoginPage());
                   },
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(50)),

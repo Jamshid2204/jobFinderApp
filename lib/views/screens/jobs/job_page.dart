@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jobfinderapp/controllers/bookmark_provider.dart';
 import 'package:jobfinderapp/controllers/jobs_provider.dart';
 import 'package:jobfinderapp/controllers/login_provider.dart';
+import 'package:jobfinderapp/controllers/zoom_provider.dart';
+import 'package:jobfinderapp/models/request/applied/applied.dart';
 import 'package:jobfinderapp/models/response/bookmarks/book_res.dart';
 import 'package:jobfinderapp/models/response/jobs/get_job.dart';
+import 'package:jobfinderapp/services/firebase_services.dart';
+import 'package:jobfinderapp/services/helpers/applied_helper.dart';
 import 'package:jobfinderapp/services/helpers/jobs_helper.dart';
 import 'package:jobfinderapp/views/common/BackBtn.dart';
 import 'package:jobfinderapp/views/common/app_bar.dart';
@@ -14,38 +20,69 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:jobfinderapp/views/common/pages_loader.dart';
 import 'package:jobfinderapp/views/common/styled_container.dart';
+import 'package:jobfinderapp/views/screens/jobs/update_jobs.dart';
+import 'package:jobfinderapp/views/screens/mainscreen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JobPage extends StatefulWidget {
   const JobPage(
       {super.key,
       required this.title,
       required this.id,
-      required String agentName});
+      required this.agentName});
 
   final String title;
   final String id;
+  final String agentName;
 
   @override
   State<JobPage> createState() => _JobPageState();
 }
 
 class _JobPageState extends State<JobPage> {
+  FirebaseServices services = FirebaseServices();
   late Future<GetJobRes> job;
+  bool isAgent = false;
 
   @override
   void initState() {
     super.initState();
     getjob();
+    getPrefs();
   }
 
   getjob() {
     job = JobsHelper.getJob(widget.id);
   }
 
+  getPrefs() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isAgent = prefs.getBool('isAgent')?? false;
+  }
+
+  createChat(Map<String, dynamic> jobDetails, List<String> users, String chatRoomId, String messageType){
+    Map<String, dynamic> chatData = {
+      'users' : users,
+      'chatRoomId' : chatRoomId,
+      'read' : false,
+      'job' : jobDetails,
+      "profile" : profile,
+      "sender" : userUid,
+      "name" : username,
+      'agentName' : widget.agentName,
+      'messageType' : messageType,
+      'lastChat' : "Good day, Sir! I'm interested in this job",
+      'lastChatTime' : Timestamp.now()
+    };
+    services.createChatRoom(chatData: chatData);
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("agent = ${isAgent}");
     var loginNotifier = Provider.of<LoginNotifier>(context);
+    var zoomNotifier = Provider.of<ZoomNotifier>(context);
     return Consumer<JobsNotifier>(builder: (context, jobsNotifier, child) {
       // jobsNotifier.getJob(widget.id);
       return Scaffold(
@@ -83,7 +120,7 @@ class _JobPageState extends State<JobPage> {
                     })
                   : const SizedBox.shrink()
             ],
-            child: const BackBtn(),
+            child: const BackBtn(color: Colors.black,),
           ),
         ),
         body: BuildStyleContainer(
@@ -229,10 +266,42 @@ class _JobPageState extends State<JobPage> {
                             alignment: Alignment.bottomCenter,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 20.0.w),
-                              child: CustomOutlineBtn(
+                              child: !isAgent ? CustomOutlineBtn(
                                 text: !loginNotifier.loggedIn
                                     ? "Please Login"
                                     : "Apply Now",
+                                width: width,
+                                hieght: hieght * 0.06,
+                                onTap: () async{
+                                  Map<String, dynamic> jobDetails = {
+                                    'job_id' : job.id,
+                                    'image_url' : job.imageUrl,
+                                    'salary' : "${job.salary} per ${job.period}",
+                                    'title' : job.title,
+                                    'company' : job.company,
+                                  };
+                                  List<String> users = [job.agentId, userUid];
+                                  String chatRoomId = '${job.id}.$userUid';
+                                  String messageType = 'text';
+                                  bool doesChatExist = await services.chatRoomExists(chatRoomId);
+                                  if(doesChatExist == false){
+                                  createChat(jobDetails, users, chatRoomId, messageType);
+                                  AppliedPost model = AppliedPost(job: job.id);
+                                  var newModel = appliedPostToJson(model);
+                                  AppliedtHelper.applyJob(newModel);
+                                  zoomNotifier.currentIndex = 1;
+                                  Get.to(() => const MainScreen());
+                                  }
+                                },
+                                color1: Color(kLight.value),
+                                color2: Color(kOrange.value),
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                              ):CustomOutlineBtn(
+                                text: 'Edit Job',
+                                onTap: (){
+                                  jobUpdate = job;
+                                  Get.off(() => const UpdateJobs());
+                                },
                                 width: width,
                                 hieght: hieght * 0.06,
                                 color1: Color(kLight.value),

@@ -24,19 +24,19 @@ class UpdateJobs extends StatefulWidget {
 }
 
 class _UpdateJobs extends State<UpdateJobs> {
-  TextEditingController title = TextEditingController();
-  TextEditingController location = TextEditingController();
-  TextEditingController company = TextEditingController();
-  TextEditingController description = TextEditingController();
-  TextEditingController category = TextEditingController();
-  TextEditingController salary = TextEditingController();
-  TextEditingController contract = TextEditingController();
-  TextEditingController period = TextEditingController();
-  TextEditingController rq1 = TextEditingController();
-  TextEditingController rq2 = TextEditingController();
-  TextEditingController rq3 = TextEditingController();
-  TextEditingController rq4 = TextEditingController();
-  TextEditingController rq5 = TextEditingController();
+  TextEditingController title = TextEditingController(text: jobUpdate!.title);
+  TextEditingController location = TextEditingController(text: jobUpdate!.location);
+  TextEditingController company = TextEditingController(text: jobUpdate!.company);
+  TextEditingController description = TextEditingController(text: jobUpdate!.description);
+  TextEditingController category = TextEditingController(text: jobUpdate!.category);
+  TextEditingController salary = TextEditingController(text: jobUpdate!.salary);
+  TextEditingController contract = TextEditingController(text: jobUpdate!.contract);
+  TextEditingController period = TextEditingController(text: jobUpdate!.period);
+  TextEditingController rq1 = TextEditingController(text: jobUpdate!.requirements[0]);
+  TextEditingController rq2 = TextEditingController(text: jobUpdate!.requirements[1]);
+  TextEditingController rq3 = TextEditingController(text: jobUpdate!.requirements[2]);
+  TextEditingController rq4 = TextEditingController(text: jobUpdate!.requirements[3]);
+  TextEditingController rq5 = TextEditingController(text: jobUpdate!.requirements[4]);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,7 @@ class _UpdateJobs extends State<UpdateJobs> {
           child: CustomAppBar(
               color: Color(kNewBlue.value),
               text: "Upload Job",
-              child: const BackBtn())),
+              child: const BackBtn(color: Colors.black,))),
       body: Stack(
         children: [
           Positioned(
@@ -295,10 +295,10 @@ class _UpdateJobs extends State<UpdateJobs> {
                                               category: category.text, 
                                               salary: salary.text, 
                                               contract: contract.text, 
-                                              hiring: true, 
+                                              hiring: jobUpdate!.hiring, 
                                               period: period.text, 
                                               imageUrl: 'https://cdn-icons-png.flaticon.com/128/3985/3985018.png', 
-                                              agentId: userUid, 
+                                              agentId: jobUpdate!.agentId, 
                                               requirements: [
                                                 rq1.text,
                                                 rq2.text,
@@ -307,7 +307,7 @@ class _UpdateJobs extends State<UpdateJobs> {
                                                 rq5.text,
                                               ]);
                                               var model = createJobsRequestToJson(rawModel);
-                                              JobsHelper.createJob(model);
+                                              JobsHelper.updateJob(model, jobUpdate!.id);
                                               zoomNotifier.currentIndex = 0;
                                               Get.to(() => const MainScreen());
                                             },

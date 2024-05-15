@@ -4,9 +4,13 @@ import 'package:get/get.dart';
 import 'package:jobfinderapp/constants/app_constants.dart';
 
 class BackBtn extends StatelessWidget {
-  const BackBtn({
+  const BackBtn(
+  {
     super.key,
+    required this.color
   });
+
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,7 @@ class BackBtn extends StatelessWidget {
           Get.back();
         },
         
-        child: Icon(AntDesign.leftcircleo,color: Color(kLight.value)),
+        child: Icon(AntDesign.leftcircleo, color: color,),
       );
   }
 }

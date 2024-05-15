@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Padding(
               padding: EdgeInsets.all(12.0.h),
               child: widget.drawer == false
-                  ? const BackBtn()
+                  ? const BackBtn(color: Colors.white,)
                   : DrawerWidget(
                       color: Color(kLight.value),
                     ),
@@ -285,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         const HeightSpacer(size: 20),
                                         // const SkillsWidget(),
                                         const HeightSpacer(size: 20),
-                                        profile!.isAgent
+                                        profile.isAgent
                                             ? Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -331,7 +331,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 color: Color(kOrange.value),
                                                 color1: Color(kOrange.value)),
                                         const HeightSpacer(size: 20),
-                                        
+                                        CustomOutlineBtn(
+                                            onTap: () {
+                                              zoomNotifier.currentIndex = 0;
+                                              loginNotifier.logout();
+                                              Get.to(() => const MainScreen());
+                                            },
+                                            width: width,
+                                            hieght: 40.h,
+                                            text: "Proceed to logout",
+                                            color: Color(kOrange.value),
+                                            color1: Color(kOrange.value))
                                       ],
                                     ));
                               }
